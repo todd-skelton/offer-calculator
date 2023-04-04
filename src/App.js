@@ -18,8 +18,8 @@ import React, { useState } from 'react';
 
 import './App.css';
 
-function calculateBreakEven(totalSalesPrice, numberOfItems, staticCost, relativeCost) {
-  return totalSalesPrice - (relativeCost * totalSalesPrice) - (staticCost * numberOfItems);
+function calculateBreakEven(totalMarketValue, numberOfCards, staticCost, relativeCost) {
+  return totalMarketValue - (relativeCost * totalMarketValue) - (staticCost * numberOfCards);
 }
 
 function TabPanel(props) {
@@ -52,24 +52,24 @@ function App() {
     [prefersDarkMode],
   );
   const [tabIndex, setTabIndex] = React.useState(0);
-  const [totalSalesPrice, setTotalSalesPrice] = useState(100);
+  const [totalMarketValue, setTotalMarketValue] = useState(100);
   const [numberOfItems, setNumberOfItems] = useState(10);
   const [staticCost, setStaticCost] = useState(0.30);
   const [relativeCost, setRelativeCost] = useState(.1275);
-  const breakEven = calculateBreakEven(totalSalesPrice, numberOfItems, staticCost, relativeCost);
+  const breakEven = calculateBreakEven(totalMarketValue, numberOfItems, staticCost, relativeCost);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Stack spacing={2} margin={2}>
         <Typography variant="h3">Offer Calculator</Typography>
-        <TextField id="outlined-basic" label="Total sales price" variant="outlined" value={totalSalesPrice} onChange={(e) => setTotalSalesPrice(e.target.value)} InputProps={{
+        <TextField id="total-market-value" label="Total market value" variant="outlined" value={totalMarketValue} onChange={(e) => setTotalMarketValue(e.target.value)} InputProps={{
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }} />
-        <TextField id="outlined-basic" label="Number of cards" variant="outlined" value={numberOfItems} onChange={(e) => setNumberOfItems(e.target.value)} />
-        <TextField id="outlined-basic" label="Static cost per card" variant="outlined" value={staticCost} onChange={(e) => setStaticCost(e.target.value)} InputProps={{
+        <TextField id="number-of-cards" label="Number of cards" variant="outlined" value={numberOfItems} onChange={(e) => setNumberOfItems(e.target.value)} />
+        <TextField id="static-cost-per-card" label="Static cost per card" variant="outlined" value={staticCost} onChange={(e) => setStaticCost(e.target.value)} InputProps={{
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }} />
-        <TextField id="outlined-basic" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} />
+        <TextField id="relative-cost" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} />
         <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
           <Tab label="By profit margin" />
           <Tab label="By offer %" />
@@ -90,8 +90,8 @@ function App() {
                   return (
                     <TableRow>
                       <TableCell component="th" scope="row">{percent.toLocaleString("en", { style: "percent" })}</TableCell>
-                      <TableCell>{(breakEven - (totalSalesPrice * percent)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell>{((breakEven - (totalSalesPrice * percent)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{(breakEven - (totalMarketValue * percent)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{((breakEven - (totalMarketValue * percent)) / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
                     </TableRow>
                   )
                 })}
@@ -112,12 +112,12 @@ function App() {
               <TableBody>
                 {Array(11).fill().map((_, i) => {
                   const percent = i * .05 + 0.5;
-                  const offer = totalSalesPrice * percent;
+                  const offer = totalMarketValue * percent;
                   return (
                     <TableRow>
                       <TableCell component="th" scope="row">{percent.toLocaleString("en", { style: "percent" })}</TableCell>
                       <TableCell>{offer.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell>{((breakEven - percent * totalSalesPrice) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{((breakEven - percent * totalMarketValue) / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
                     </TableRow>
                   )
                 })}
