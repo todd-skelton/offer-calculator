@@ -3,12 +3,14 @@ import CssBaseline from '@mui/material/CssBaseline';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import { createTheme } from '@mui/material/styles';
+import Tab from '@mui/material/Tab';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -18,6 +20,23 @@ import './App.css';
 
 function calculateBreakEven(totalSalesPrice, numberOfItems, staticCost, relativeCost) {
   return totalSalesPrice - (relativeCost * totalSalesPrice) - (staticCost * numberOfItems);
+}
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`tabpanel-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Typography>{children}</Typography>
+      )}
+    </div>
+  );
 }
 
 function App() {
@@ -32,6 +51,7 @@ function App() {
       }),
     [prefersDarkMode],
   );
+  const [tabIndex, setTabIndex] = React.useState(0);
   const [totalSalesPrice, setTotalSalesPrice] = useState(100);
   const [numberOfItems, setNumberOfItems] = useState(10);
   const [staticCost, setStaticCost] = useState(0.30);
@@ -50,29 +70,62 @@ function App() {
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }} />
         <TextField id="outlined-basic" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} />
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Profit Margin</TableCell>
-                <TableCell>Offer ($)</TableCell>
-                <TableCell>Offer (%)</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Array(21).fill().map((_, i) => {
-                const percent = i * .05;
-                return (
-                  <TableRow>
-                    <TableCell component="th" scope="row">{percent.toLocaleString("en", { style: "percent" })}</TableCell>
-                    <TableCell>{(breakEven - (totalSalesPrice * percent)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                    <TableCell>{((breakEven - (totalSalesPrice * percent)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
+          <Tab label="By profit margin" />
+          <Tab label="By offer %" />
+        </Tabs>
+        <TabPanel value={tabIndex} index={0}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Profit Margin</TableCell>
+                  <TableCell>Offer ($)</TableCell>
+                  <TableCell>Offer (%)</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Array(11).fill().map((_, i) => {
+                  const percent = i * .05;
+                  return (
+                    <TableRow>
+                      <TableCell component="th" scope="row">{percent.toLocaleString("en", { style: "percent" })}</TableCell>
+                      <TableCell>{(breakEven - (totalSalesPrice * percent)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{((breakEven - (totalSalesPrice * percent)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </TabPanel>
+        <TabPanel value={tabIndex} index={1}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Offer (%)</TableCell>
+                  <TableCell>Offer ($)</TableCell>
+                  <TableCell>Profit Margin</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Array(11).fill().map((_, i) => {
+                  const percent = i * .05 + 0.5;
+                  const offer = totalSalesPrice * percent;
+                  return (
+                    <TableRow>
+                      <TableCell component="th" scope="row">{percent.toLocaleString("en", { style: "percent" })}</TableCell>
+                      <TableCell>{offer.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{((breakEven - percent * totalSalesPrice) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </TabPanel>
+
       </Stack>
     </ThemeProvider>
   );
