@@ -42,14 +42,14 @@ function App() {
       <CssBaseline />
       <Stack spacing={2} margin={2}>
         <Typography variant="h3">Offer Calculator</Typography>
-        <TextField id="outlined-basic" label="Total Sales Price" variant="outlined" value={totalSalesPrice} onChange={(e) => setTotalSalesPrice(e.target.value)} InputProps={{
+        <TextField id="outlined-basic" label="Total sales price" variant="outlined" value={totalSalesPrice} onChange={(e) => setTotalSalesPrice(e.target.value)} InputProps={{
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }} />
-        <TextField id="outlined-basic" label="Number of Items" variant="outlined" value={numberOfItems} onChange={(e) => setNumberOfItems(e.target.value)} />
-        <TextField id="outlined-basic" label="Static Cost per Item" variant="outlined" value={staticCost} onChange={(e) => setStaticCost(e.target.value)} InputProps={{
+        <TextField id="outlined-basic" label="Number of cards" variant="outlined" value={numberOfItems} onChange={(e) => setNumberOfItems(e.target.value)} />
+        <TextField id="outlined-basic" label="Static cost per card" variant="outlined" value={staticCost} onChange={(e) => setStaticCost(e.target.value)} InputProps={{
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }} />
-        <TextField id="outlined-basic" label="Relative Cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} />
+        <TextField id="outlined-basic" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} />
         <TableContainer>
           <Table>
             <TableHead>
