@@ -51,41 +51,25 @@ function App() {
         }} />
         <TextField id="outlined-basic" label="Relative Cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} />
         <TableContainer>
-          <Table sx={{ minWidth: 650 }}>
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Profit Margin</TableCell>
-                <TableCell align="right">25%</TableCell>
-                <TableCell align="right">20%</TableCell>
-                <TableCell align="right">15%</TableCell>
-                <TableCell align="right">10%</TableCell>
-                <TableCell align="right">5%</TableCell>
-                <TableCell align="right">0%</TableCell>
+                <TableCell>Offer ($)</TableCell>
+                <TableCell>Offer (%)</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Offer($)
-                </TableCell>
-                <TableCell align="right">{(breakEven - (totalSalesPrice * 0.25)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{(breakEven - (totalSalesPrice * 0.20)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{(breakEven - (totalSalesPrice * 0.15)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{(breakEven - (totalSalesPrice * 0.10)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{(breakEven - (totalSalesPrice * 0.05)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{(breakEven).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Offer(%)
-                </TableCell>
-                <TableCell align="right">{((breakEven - (totalSalesPrice * 0.25)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{((breakEven - (totalSalesPrice * 0.20)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{((breakEven - (totalSalesPrice * 0.15)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{((breakEven - (totalSalesPrice * 0.10)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{((breakEven - (totalSalesPrice * 0.05)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
-                <TableCell align="right">{(breakEven / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
-              </TableRow>
+              {Array(21).fill().map((_, i) => {
+                const percent = i * .05;
+                return (
+                  <TableRow>
+                    <TableCell component="th" scope="row">{percent.toLocaleString("en", { style: "percent" })}</TableCell>
+                    <TableCell>{(breakEven - (totalSalesPrice * percent)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
+                    <TableCell>{((breakEven - (totalSalesPrice * percent)) / totalSalesPrice).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         </TableContainer>
