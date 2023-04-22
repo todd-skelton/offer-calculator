@@ -54,7 +54,7 @@ function App() {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [totalMarketValue, setTotalMarketValue] = useState(100);
   const [numberOfItems, setNumberOfItems] = useState(10);
-  const [staticCost, setStaticCost] = useState(0.30);
+  const [staticCost, setStaticCost] = useState(0.50);
   const [relativeCost, setRelativeCost] = useState(.1275);
   const breakEven = calculateBreakEven(totalMarketValue, numberOfItems, staticCost, relativeCost);
   return (
