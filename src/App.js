@@ -14,34 +14,17 @@ import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import React, { useState } from 'react';
-
+import React from 'react';
+import { usePersistedState } from './usePersistedState';
+import TabPanel from './TabPanel';
 import './App.css';
 
 function calculateBreakEven(totalMarketValue, numberOfCards, staticCost, relativeCost) {
   return totalMarketValue - (relativeCost * totalMarketValue) - (staticCost * numberOfCards);
 }
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Typography>{children}</Typography>
-      )}
-    </div>
-  );
-}
-
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
   const theme = React.useMemo(
     () =>
       createTheme({
@@ -51,12 +34,14 @@ function App() {
       }),
     [prefersDarkMode],
   );
-  const [tabIndex, setTabIndex] = React.useState(0);
-  const [totalMarketValue, setTotalMarketValue] = useState(100);
-  const [numberOfItems, setNumberOfItems] = useState(10);
-  const [staticCost, setStaticCost] = useState(0.50);
-  const [relativeCost, setRelativeCost] = useState(.1275);
+
+  const [tabIndex, setTabIndex] = usePersistedState('tabIndex', 0);
+  const [totalMarketValue, setTotalMarketValue] = usePersistedState('totalMarketValue', 100);
+  const [numberOfItems, setNumberOfItems] = usePersistedState('numberOfItems', 10);
+  const [staticCost, setStaticCost] = usePersistedState('staticCost', 0.50);
+  const [relativeCost, setRelativeCost] = usePersistedState('relativeCost', .15);
   const breakEven = calculateBreakEven(totalMarketValue, numberOfItems, staticCost, relativeCost);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -125,7 +110,6 @@ function App() {
             </Table>
           </TableContainer>
         </TabPanel>
-
       </Stack>
     </ThemeProvider>
   );
