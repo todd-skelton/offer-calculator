@@ -64,19 +64,27 @@ function App() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Profit Margin</TableCell>
-                  <TableCell>Offer ($)</TableCell>
-                  <TableCell>Offer (%)</TableCell>
+                  <TableCell>Margin</TableCell>
+                  <TableCell>Profit</TableCell>
+                  <TableCell>/ Card</TableCell>
+                  <TableCell>Offer</TableCell>
+                  <TableCell>Offer</TableCell>
+
                 </TableRow>
               </TableHead>
               <TableBody>
                 {Array(11).fill().map((_, i) => {
                   const percent = i * .05;
+                  const offer = breakEven - (totalMarketValue * percent);
+                  const profit = breakEven - offer;
+                  const profitPerCard = profit / numberOfItems;
                   return (
                     <TableRow>
                       <TableCell component="th" scope="row">{percent.toLocaleString("en", { style: "percent" })}</TableCell>
-                      <TableCell>{(breakEven - (totalMarketValue * percent)).toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell>{((breakEven - (totalMarketValue * percent)) / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{profit.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{profitPerCard.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{offer.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{(offer / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
                     </TableRow>
                   )
                 })}
@@ -89,20 +97,26 @@ function App() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Offer (%)</TableCell>
-                  <TableCell>Offer ($)</TableCell>
-                  <TableCell>Profit Margin</TableCell>
+                  <TableCell>Offer</TableCell>
+                  <TableCell>Offer</TableCell>
+                  <TableCell>Margin</TableCell>
+                  <TableCell>Profit</TableCell>
+                  <TableCell>/ Card</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {Array(11).fill().map((_, i) => {
                   const percent = i * .05 + 0.5;
                   const offer = totalMarketValue * percent;
+                  const profit = breakEven - offer;
+                  const profitPerCard = profit / numberOfItems;
                   return (
                     <TableRow>
                       <TableCell component="th" scope="row">{percent.toLocaleString("en", { style: "percent" })}</TableCell>
                       <TableCell>{offer.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell>{((breakEven - percent * totalMarketValue) / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{(profit / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{profit.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{profitPerCard.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
                     </TableRow>
                   )
                 })}
