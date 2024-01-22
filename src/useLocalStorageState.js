@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export function usePersistedState(key, defaultValue) {
+export function useLocalStorageState(key, defaultValue) {
     // Initialize state from localStorage or with a default value
     const [state, setState] = useState(() => {
         const storedValue = localStorage.getItem(key);

@@ -15,7 +15,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
-import { usePersistedState } from './usePersistedState';
+import { useLocalStorageState } from './useLocalStorageState';
 import TabPanel from './TabPanel';
 import './App.css';
 
@@ -35,11 +35,11 @@ function App() {
     [prefersDarkMode],
   );
 
-  const [tabIndex, setTabIndex] = usePersistedState('tabIndex', 0);
-  const [totalMarketValue, setTotalMarketValue] = usePersistedState('totalMarketValue', 100);
-  const [numberOfItems, setNumberOfItems] = usePersistedState('numberOfItems', 10);
-  const [staticCost, setStaticCost] = usePersistedState('staticCost', 0.50);
-  const [relativeCost, setRelativeCost] = usePersistedState('relativeCost', .15);
+  const [tabIndex, setTabIndex] = useLocalStorageState('tabIndex', 0);
+  const [totalMarketValue, setTotalMarketValue] = useLocalStorageState('totalMarketValue', 100);
+  const [numberOfItems, setNumberOfItems] = useLocalStorageState('numberOfItems', 10);
+  const [staticCost, setStaticCost] = useLocalStorageState('staticCost', 0.30);
+  const [relativeCost, setRelativeCost] = useLocalStorageState('relativeCost', .1275);
   const breakEven = calculateBreakEven(totalMarketValue, numberOfItems, staticCost, relativeCost);
 
   return (
