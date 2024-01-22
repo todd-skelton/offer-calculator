@@ -19,8 +19,18 @@ import { useLocalStorageState } from './useLocalStorageState';
 import TabPanel from './TabPanel';
 import './App.css';
 
+
 function calculateBreakEven(totalMarketValue, numberOfCards, staticCost, relativeCost) {
   return totalMarketValue - (relativeCost * totalMarketValue) - (staticCost * numberOfCards);
+}
+
+function tryEval(value) {
+  try {
+    return eval(value);
+  }
+  catch {
+    return NaN;
+  }
 }
 
 function App() {
@@ -40,7 +50,13 @@ function App() {
   const [numberOfItems, setNumberOfItems] = useLocalStorageState('numberOfItems', 10);
   const [staticCost, setStaticCost] = useLocalStorageState('staticCost', 0.30);
   const [relativeCost, setRelativeCost] = useLocalStorageState('relativeCost', .1275);
-  const breakEven = calculateBreakEven(totalMarketValue, numberOfItems, staticCost, relativeCost);
+  
+  const evaluatedTotalMarketValue = tryEval(totalMarketValue);
+  const evaluatedNumberOfItems = tryEval(numberOfItems);
+  const evaluatedStaticCost = tryEval(staticCost);
+  const evaluatedRelativeCost = tryEval(relativeCost);
+
+  const breakEven = calculateBreakEven(evaluatedTotalMarketValue, evaluatedNumberOfItems, evaluatedStaticCost, evaluatedRelativeCost);
 
   return (
     <ThemeProvider theme={theme}>
@@ -49,12 +65,18 @@ function App() {
         <Typography variant="h3">Offer Calculator</Typography>
         <TextField id="total-market-value" label="Total market value" variant="outlined" value={totalMarketValue} onChange={(e) => setTotalMarketValue(e.target.value)} InputProps={{
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          endAdornment: <InputAdornment position="end">{evaluatedTotalMarketValue}</InputAdornment>,
         }} />
-        <TextField id="number-of-cards" label="Number of cards" variant="outlined" value={numberOfItems} onChange={(e) => setNumberOfItems(e.target.value)} />
+        <TextField id="number-of-cards" label="Number of cards" variant="outlined" value={numberOfItems} onChange={(e) => setNumberOfItems(e.target.value)} InputProps={{
+          endAdornment: <InputAdornment position="end">{evaluatedNumberOfItems}</InputAdornment>,
+        }} />
         <TextField id="static-cost-per-card" label="Static cost per card" variant="outlined" value={staticCost} onChange={(e) => setStaticCost(e.target.value)} InputProps={{
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          endAdornment: <InputAdornment position="end">{evaluatedStaticCost}</InputAdornment>,
         }} />
-        <TextField id="relative-cost" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} />
+        <TextField id="relative-cost" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} InputProps={{
+          endAdornment: <InputAdornment position="end">{evaluatedRelativeCost}</InputAdornment>,
+        }} />
         <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
           <Tab label="By profit margin" />
           <Tab label="By offer %" />
@@ -75,16 +97,16 @@ function App() {
               <TableBody>
                 {Array(11).fill().map((_, i) => {
                   const profitMargin = i * .05;
-                  const offer = breakEven - (totalMarketValue * profitMargin);
+                  const offer = breakEven - (evaluatedTotalMarketValue * profitMargin);
                   const profit = breakEven - offer;
-                  const profitPerCard = profit / numberOfItems;
+                  const profitPerCard = profit / evaluatedNumberOfItems;
                   return (
                     <TableRow>
                       <TableCell component="th" scope="row">{profitMargin.toLocaleString("en", { style: "percent" })}</TableCell>
                       <TableCell>{profit.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>{profitPerCard.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>{offer.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell>{(offer / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{(offer / evaluatedTotalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
                     </TableRow>
                   )
                 })}
@@ -107,14 +129,14 @@ function App() {
               <TableBody>
                 {Array(11).fill().map((_, i) => {
                   const offerPercentage = i * .05 + 0.5;
-                  const offer = totalMarketValue * offerPercentage;
+                  const offer = evaluatedTotalMarketValue * offerPercentage;
                   const profit = breakEven - offer;
-                  const profitPerCard = profit / numberOfItems;
+                  const profitPerCard = profit / evaluatedNumberOfItems;
                   return (
                     <TableRow>
                       <TableCell component="th" scope="row">{offerPercentage.toLocaleString("en", { style: "percent" })}</TableCell>
                       <TableCell>{offer.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell>{(profit / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{(profit / evaluatedTotalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>{profit.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>{profitPerCard.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
                     </TableRow>
@@ -139,16 +161,16 @@ function App() {
               <TableBody>
                 {Array(11).fill().map((_, i) => {
                   const profitPerCard = i * 0.25;
-                  const profit = profitPerCard * numberOfItems;
-                  const profitMargin = profit / totalMarketValue;
-                  const offer = breakEven - (totalMarketValue * profitMargin);
+                  const profit = profitPerCard * evaluatedNumberOfItems;
+                  const profitMargin = profit / evaluatedTotalMarketValue;
+                  const offer = breakEven - (evaluatedTotalMarketValue * profitMargin);
                   return (
                     <TableRow>
                       <TableCell component="th" scope="row">{profitPerCard.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>{profit.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
                       <TableCell>{profitMargin.toLocaleString("en", { style: "percent" })}</TableCell>
                       <TableCell>{offer.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</TableCell>
-                      <TableCell>{(offer / totalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
+                      <TableCell>{(offer / evaluatedTotalMarketValue).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })}</TableCell>
                     </TableRow>
                   )
                 })}
