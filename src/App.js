@@ -65,17 +65,17 @@ function App() {
         <Typography variant="h3">Offer Calculator</Typography>
         <TextField id="total-market-value" label="Total market value" variant="outlined" value={totalMarketValue} onChange={(e) => setTotalMarketValue(e.target.value)} InputProps={{
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
-          endAdornment: <InputAdornment position="end">{evaluatedTotalMarketValue.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</InputAdornment>,
+          endAdornment: <InputAdornment position="end">{evaluatedTotalMarketValue?.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</InputAdornment>,
         }} />
         <TextField id="number-of-cards" label="Number of cards" variant="outlined" value={numberOfItems} onChange={(e) => setNumberOfItems(e.target.value)} InputProps={{
-          endAdornment: <InputAdornment position="end">{evaluatedNumberOfItems.toLocaleString()}</InputAdornment>,
+          endAdornment: <InputAdornment position="end">{evaluatedNumberOfItems?.toLocaleString()}</InputAdornment>,
         }} />
         <TextField id="static-cost-per-card" label="Static cost per card" variant="outlined" value={staticCost} onChange={(e) => setStaticCost(e.target.value)} InputProps={{
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
-          endAdornment: <InputAdornment position="end">{evaluatedStaticCost.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</InputAdornment>,
+          endAdornment: <InputAdornment position="end">{evaluatedStaticCost?.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</InputAdornment>,
         }} />
         <TextField id="relative-cost" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} InputProps={{
-          endAdornment: <InputAdornment position="end">{evaluatedRelativeCost.toLocaleString("en", { style: "percent", minimumFractionDigits: 0, maximumFractionDigits: 5 })}</InputAdornment>,
+          endAdornment: <InputAdornment position="end">{evaluatedRelativeCost?.toLocaleString("en", { style: "percent", minimumFractionDigits: 0, maximumFractionDigits: 5 })}</InputAdornment>,
         }} />
         <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
           <Tab label="By profit margin" />
