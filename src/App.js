@@ -77,7 +77,7 @@ function App() {
         <TextField id="relative-cost" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} InputProps={{
           endAdornment: <InputAdornment position="end">{evaluatedRelativeCost?.toLocaleString("en", { style: "percent", minimumFractionDigits: 0, maximumFractionDigits: 5 })}</InputAdornment>,
         }} />
-        <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
+        <Tabs variant="scrollable" value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
           <Tab label="By profit margin" />
           <Tab label="By offer %" />
           <Tab label="By Profit / Card" />
