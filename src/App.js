@@ -20,11 +20,6 @@ import { useLocalStorageState } from './useLocalStorageState';
 import TabPanel from './TabPanel';
 import './App.css';
 
-
-function calculateBreakEven(totalMarketValue, numberOfCards, staticCost, relativeCost) {
-  return totalMarketValue - (relativeCost * totalMarketValue) - (staticCost * numberOfCards);
-}
-
 function tryEval(value) {
   try {
     return eval(value);
@@ -49,15 +44,16 @@ function App() {
   const [tabIndex, setTabIndex] = useLocalStorageState('tabIndex', 0);
   const [totalMarketValue, setTotalMarketValue] = useLocalStorageState('totalMarketValue', 100);
   const [numberOfItems, setNumberOfItems] = useLocalStorageState('numberOfItems', 10);
-  const [staticCost, setStaticCost] = useLocalStorageState('staticCost', 0.30);
-  const [relativeCost, setRelativeCost] = useLocalStorageState('relativeCost', .1275);
+  const [staticOverhead, setStaticOverhead] = useLocalStorageState('staticOverhead', 0.30);
+  const [relativeOverhead, setRelativeOverhead] = useLocalStorageState('relativeOverhead', .1275);
 
   const evaluatedTotalMarketValue = tryEval(totalMarketValue);
   const evaluatedNumberOfItems = tryEval(numberOfItems);
-  const evaluatedStaticCost = tryEval(staticCost);
-  const evaluatedRelativeCost = tryEval(relativeCost);
+  const evaluatedStaticOverhead = tryEval(staticOverhead);
+  const evaluatedRelativeOverhead = tryEval(relativeOverhead);
 
-  const breakEven = calculateBreakEven(evaluatedTotalMarketValue, evaluatedNumberOfItems, evaluatedStaticCost, evaluatedRelativeCost);
+  const overhead = (evaluatedRelativeOverhead * evaluatedTotalMarketValue) + (evaluatedStaticOverhead * evaluatedNumberOfItems);
+  const breakEven = evaluatedTotalMarketValue - overhead;
 
   return (
     <ThemeProvider theme={theme}>
@@ -75,13 +71,22 @@ function App() {
             }} />
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField id="relative-cost" label="Relative cost" variant="outlined" value={relativeCost} onChange={(e) => setRelativeCost(e.target.value)} fullWidth InputProps={{
-              endAdornment: <InputAdornment position="end">{evaluatedRelativeCost?.toLocaleString("en", { style: "percent", minimumFractionDigits: 0, maximumFractionDigits: 5 })}</InputAdornment>,
+            <TextField id="relative-cost" label="Relative overhead" variant="outlined" value={relativeOverhead} onChange={(e) => setRelativeOverhead(e.target.value)} fullWidth InputProps={{
+              endAdornment: <InputAdornment position="end">{evaluatedRelativeOverhead?.toLocaleString("en", { style: "percent", minimumFractionDigits: 0, maximumFractionDigits: 5 })}</InputAdornment>,
             }} />
-            <TextField id="static-cost-per-card" label="Static cost per card" variant="outlined" value={staticCost} onChange={(e) => setStaticCost(e.target.value)} fullWidth InputProps={{
+            <TextField id="static-overhead-per-item" label="Static overhead per item" variant="outlined" value={staticOverhead} onChange={(e) => setStaticOverhead(e.target.value)} fullWidth InputProps={{
               startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              endAdornment: <InputAdornment position="end">{evaluatedStaticCost?.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</InputAdornment>,
+              endAdornment: <InputAdornment position="end">{evaluatedStaticOverhead?.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</InputAdornment>,
             }} />
+          </Stack>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <TextField id="total-overhead" label="Total overhead" variant="outlined" value={overhead} fullWidth InputProps={{
+              endAdornment: <InputAdornment position="end">{overhead?.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</InputAdornment>,
+            }} disabled />
+            <TextField id="break-even" label="Break-even" variant="outlined" value={breakEven} fullWidth InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              endAdornment: <InputAdornment position="end">{breakEven?.toLocaleString("en", { style: "currency", currency: "USD", minimumFractionDigits: 2 })}</InputAdornment>,
+            }} disabled />
           </Stack>
           <Tabs variant="scrollable" value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
             <Tab label="By profit margin" />
