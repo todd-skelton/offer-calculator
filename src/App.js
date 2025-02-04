@@ -275,8 +275,8 @@ function App() {
                     .map((_, i) => {
                       const profitMargin = i * 0.05;
                       const offer =
-                        breakEven - scaledTotalMarketValue * profitMargin;
-                      const offerPercentage = offer / scaledTotalMarketValue;
+                        breakEven - evaluatedTotalMarketValue * profitMargin;
+                      const offerPercentage = offer / evaluatedTotalMarketValue;
                       const profit = breakEven - offer;
                       const profitPerItem = profit / evaluatedNumberOfItems;
                       const roi = profit / offer;
@@ -345,9 +345,9 @@ function App() {
                     .fill()
                     .map((_, i) => {
                       const offerPercentage = i * 0.05 + 0.5;
-                      const offer = scaledTotalMarketValue * offerPercentage;
+                      const offer = evaluatedTotalMarketValue * offerPercentage;
                       const profit = breakEven - offer;
-                      const margin = profit / scaledTotalMarketValue;
+                      const margin = profit / evaluatedTotalMarketValue;
                       const profitPerItem = profit / evaluatedNumberOfItems;
                       const roi = profit / offer;
                       return (
@@ -416,10 +416,10 @@ function App() {
                     .map((_, i) => {
                       const profitPerItem = i * 0.25;
                       const profit = profitPerItem * evaluatedNumberOfItems;
-                      const profitMargin = profit / scaledTotalMarketValue;
+                      const profitMargin = profit / evaluatedTotalMarketValue;
                       const offer =
-                        breakEven - scaledTotalMarketValue * profitMargin;
-                      const offerPercentage = offer / scaledTotalMarketValue;
+                        breakEven - evaluatedTotalMarketValue * profitMargin;
+                      const offerPercentage = offer / evaluatedTotalMarketValue;
                       const roi = profit / offer;
                       return (
                         <TableRow>
@@ -487,9 +487,9 @@ function App() {
                     .map((_, i) => {
                       const roi = i * 0.05;
                       const offer = breakEven / (1 + roi);
-                      const offerPercentage = offer / scaledTotalMarketValue;
+                      const offerPercentage = offer / evaluatedTotalMarketValue;
                       const profit = breakEven - offer;
-                      const profitMargin = profit / scaledTotalMarketValue;
+                      const profitMargin = profit / evaluatedTotalMarketValue;
                       const profitPerItem = profit / evaluatedNumberOfItems;
                       return (
                         <TableRow>
