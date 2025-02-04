@@ -20,9 +20,23 @@ import { useLocalStorageState } from "./useLocalStorageState";
 import TabPanel from "./TabPanel";
 import "./App.css";
 
-function tryEval(value) {
+function tryEval(expression) {
   try {
-    return eval(value);
+    return eval(expression);
+  } catch {
+    return NaN;
+  }
+}
+
+function tryEvalMarketScalingFactor(
+  expression,
+  totalMarketValue,
+  numberOfItems,
+  staticOverhead,
+  relativeOverhead
+) {
+  try {
+    return eval(expression);
   } catch {
     return NaN;
   }
@@ -57,16 +71,30 @@ function App() {
     "relativeOverhead",
     0.1275
   );
+  const [marketScalingFactor, setMarketScalingFactor] = useLocalStorageState(
+    "marketScalingFactor",
+    1
+  );
 
   const evaluatedTotalMarketValue = tryEval(totalMarketValue);
   const evaluatedNumberOfItems = tryEval(numberOfItems);
   const evaluatedStaticOverhead = tryEval(staticOverhead);
   const evaluatedRelativeOverhead = tryEval(relativeOverhead);
+  const evaluatedMarketScalingFactor = tryEvalMarketScalingFactor(
+    marketScalingFactor,
+    evaluatedTotalMarketValue,
+    evaluatedNumberOfItems,
+    evaluatedStaticOverhead,
+    evaluatedRelativeOverhead
+  );
+
+  const scaledTotalMarketValue =
+    evaluatedTotalMarketValue * evaluatedMarketScalingFactor;
 
   const overhead =
-    evaluatedRelativeOverhead * evaluatedTotalMarketValue +
+    evaluatedRelativeOverhead * scaledTotalMarketValue +
     evaluatedStaticOverhead * evaluatedNumberOfItems;
-  const breakEven = evaluatedTotalMarketValue - overhead;
+  const breakEven = scaledTotalMarketValue - overhead;
 
   return (
     <ThemeProvider theme={theme}>
@@ -108,6 +136,21 @@ function App() {
                 endAdornment: (
                   <InputAdornment position="end">
                     {evaluatedNumberOfItems?.toLocaleString()}
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              id="market-scaling-factor"
+              label="Market scaling factor"
+              variant="outlined"
+              value={marketScalingFactor}
+              onChange={(e) => setMarketScalingFactor(e.target.value)}
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {evaluatedMarketScalingFactor?.toLocaleString()}
                   </InputAdornment>
                 ),
               }}
@@ -228,8 +271,8 @@ function App() {
                     .map((_, i) => {
                       const profitMargin = i * 0.05;
                       const offer =
-                        breakEven - evaluatedTotalMarketValue * profitMargin;
-                      const offerPercentage = offer / evaluatedTotalMarketValue;
+                        breakEven - scaledTotalMarketValue * profitMargin;
+                      const offerPercentage = offer / scaledTotalMarketValue;
                       const profit = breakEven - offer;
                       const profitPerItem = profit / evaluatedNumberOfItems;
                       const roi = profit / offer;
@@ -298,9 +341,9 @@ function App() {
                     .fill()
                     .map((_, i) => {
                       const offerPercentage = i * 0.05 + 0.5;
-                      const offer = evaluatedTotalMarketValue * offerPercentage;
+                      const offer = scaledTotalMarketValue * offerPercentage;
                       const profit = breakEven - offer;
-                      const margin = profit / evaluatedTotalMarketValue;
+                      const margin = profit / scaledTotalMarketValue;
                       const profitPerItem = profit / evaluatedNumberOfItems;
                       const roi = profit / offer;
                       return (
@@ -369,10 +412,10 @@ function App() {
                     .map((_, i) => {
                       const profitPerItem = i * 0.25;
                       const profit = profitPerItem * evaluatedNumberOfItems;
-                      const profitMargin = profit / evaluatedTotalMarketValue;
+                      const profitMargin = profit / scaledTotalMarketValue;
                       const offer =
-                        breakEven - evaluatedTotalMarketValue * profitMargin;
-                      const offerPercentage = offer / evaluatedTotalMarketValue;
+                        breakEven - scaledTotalMarketValue * profitMargin;
+                      const offerPercentage = offer / scaledTotalMarketValue;
                       const roi = profit / offer;
                       return (
                         <TableRow>
@@ -440,9 +483,9 @@ function App() {
                     .map((_, i) => {
                       const roi = i * 0.05;
                       const offer = breakEven / (1 + roi);
-                      const offerPercentage = offer / evaluatedTotalMarketValue;
+                      const offerPercentage = offer / scaledTotalMarketValue;
                       const profit = breakEven - offer;
-                      const profitMargin = profit / evaluatedTotalMarketValue;
+                      const profitMargin = profit / scaledTotalMarketValue;
                       const profitPerItem = profit / evaluatedNumberOfItems;
                       return (
                         <TableRow>
