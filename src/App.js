@@ -73,7 +73,7 @@ function App() {
   );
   const [marketScalingFactor, setMarketScalingFactor] = useLocalStorageState(
     "marketScalingFactor",
-    1
+    1.0
   );
 
   const evaluatedTotalMarketValue = tryEval(totalMarketValue);
@@ -150,7 +150,11 @@ function App() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {evaluatedMarketScalingFactor?.toLocaleString()}
+                    {evaluatedMarketScalingFactor?.toLocaleString("en", {
+                      style: "percent",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 5,
+                    })}
                   </InputAdornment>
                 ),
               }}
