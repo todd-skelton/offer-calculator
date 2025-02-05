@@ -35,6 +35,7 @@ function tryEvalMarketScalingFactor(
   staticOverhead,
   relativeOverhead
 ) {
+  const averageMarketValue = totalMarketValue / numberOfItems;
   try {
     return eval(expression);
   } catch {
