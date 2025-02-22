@@ -109,7 +109,7 @@ function App() {
 
   const evaluatedTotalMarketValue = tryEval(totalMarketValue);
   const evaluatedNumberOfItems = tryEval(numberOfItems);
-  const averageMarketValue = totalMarketValue / numberOfItems;
+  const averageMarketValue = evaluatedTotalMarketValue / evaluatedNumberOfItems;
   const evaluatedMarketScalingFactor = tryEvalMarketScalingFactor(
     marketScalingFactor,
     evaluatedTotalMarketValue,
