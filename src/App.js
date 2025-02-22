@@ -31,11 +31,41 @@ function tryEval(expression) {
 function tryEvalMarketScalingFactor(
   expression,
   totalMarketValue,
-  numberOfItems,
-  staticOverhead,
-  relativeOverhead
+  numberOfItems
 ) {
   const averageMarketValue = totalMarketValue / numberOfItems;
+  try {
+    return eval(expression);
+  } catch {
+    return NaN;
+  }
+}
+
+function tryEvalRelativeOverhead(
+  expression,
+  totalMarketValue,
+  numberOfItems,
+  marketScalingFactor
+) {
+  const averageMarketValue = totalMarketValue / numberOfItems;
+  const scaledTotalMarketValue = totalMarketValue * marketScalingFactor;
+  const averageScaledMarketValue = scaledTotalMarketValue / numberOfItems;
+  try {
+    return eval(expression);
+  } catch {
+    return NaN;
+  }
+}
+
+function tryEvalStaticOverhead(
+  expression,
+  totalMarketValue,
+  numberOfItems,
+  marketScalingFactor
+) {
+  const averageMarketValue = totalMarketValue / numberOfItems;
+  const scaledTotalMarketValue = totalMarketValue * marketScalingFactor;
+  const averageScaledMarketValue = scaledTotalMarketValue / numberOfItems;
   try {
     return eval(expression);
   } catch {
@@ -79,19 +109,28 @@ function App() {
 
   const evaluatedTotalMarketValue = tryEval(totalMarketValue);
   const evaluatedNumberOfItems = tryEval(numberOfItems);
-  const evaluatedStaticOverhead = tryEval(staticOverhead);
-  const evaluatedRelativeOverhead = tryEval(relativeOverhead);
+  const averageMarketValue = totalMarketValue / numberOfItems;
   const evaluatedMarketScalingFactor = tryEvalMarketScalingFactor(
     marketScalingFactor,
     evaluatedTotalMarketValue,
-    evaluatedNumberOfItems,
-    evaluatedStaticOverhead,
-    evaluatedRelativeOverhead
+    evaluatedNumberOfItems
   );
-
+  const evaluatedRelativeOverhead = tryEvalRelativeOverhead(
+    relativeOverhead,
+    evaluatedTotalMarketValue,
+    evaluatedNumberOfItems,
+    evaluatedMarketScalingFactor
+  );
+  const evaluatedStaticOverhead = tryEvalStaticOverhead(
+    staticOverhead,
+    evaluatedTotalMarketValue,
+    evaluatedNumberOfItems,
+    evaluatedMarketScalingFactor
+  );
   const scaledTotalMarketValue =
     evaluatedTotalMarketValue * evaluatedMarketScalingFactor;
-
+  const averageScaledMarketValue =
+    scaledTotalMarketValue / evaluatedNumberOfItems;
   const overhead =
     evaluatedRelativeOverhead * scaledTotalMarketValue +
     evaluatedStaticOverhead * evaluatedNumberOfItems;
@@ -142,6 +181,30 @@ function App() {
               }}
             />
             <TextField
+              id="average-market-value"
+              label="Average market value"
+              variant="outlined"
+              value={averageMarketValue}
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {averageMarketValue?.toLocaleString("en", {
+                      style: "currency",
+                      currency: "USD",
+                      minimumFractionDigits: 2,
+                    })}
+                  </InputAdornment>
+                ),
+              }}
+              disabled
+            />
+          </Stack>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            <TextField
               id="market-scaling-factor"
               label="Market scaling factor"
               variant="outlined"
@@ -160,8 +223,6 @@ function App() {
                 ),
               }}
             />
-          </Stack>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
             <TextField
               id="relative-cost"
               label="Relative overhead"
@@ -237,6 +298,28 @@ function App() {
                 endAdornment: (
                   <InputAdornment position="end">
                     {breakEven?.toLocaleString("en", {
+                      style: "currency",
+                      currency: "USD",
+                      minimumFractionDigits: 2,
+                    })}
+                  </InputAdornment>
+                ),
+              }}
+              disabled
+            />
+            <TextField
+              id="average-scaled-market-value"
+              label="Average scaled market value"
+              variant="outlined"
+              value={averageScaledMarketValue}
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {averageScaledMarketValue?.toLocaleString("en", {
                       style: "currency",
                       currency: "USD",
                       minimumFractionDigits: 2,
