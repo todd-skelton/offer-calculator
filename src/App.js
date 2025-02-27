@@ -134,7 +134,9 @@ function App() {
   const overhead =
     evaluatedRelativeOverhead * scaledTotalMarketValue +
     evaluatedStaticOverhead * evaluatedNumberOfItems;
+  const overheadPercentage = overhead / evaluatedTotalMarketValue;
   const breakEven = scaledTotalMarketValue - overhead;
+  const breakEvenPercentage = breakEven / evaluatedTotalMarketValue;
 
   return (
     <ThemeProvider theme={theme}>
@@ -184,7 +186,10 @@ function App() {
               id="average-market-value"
               label="Average market value"
               variant="outlined"
-              value={averageMarketValue}
+              value={averageMarketValue?.toLocaleString("en", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
               fullWidth
               InputProps={{
                 startAdornment: (
@@ -196,6 +201,7 @@ function App() {
                       style: "currency",
                       currency: "USD",
                       minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
                     })}
                   </InputAdornment>
                 ),
@@ -217,7 +223,7 @@ function App() {
                     {evaluatedMarketScalingFactor?.toLocaleString("en", {
                       style: "percent",
                       minimumFractionDigits: 0,
-                      maximumFractionDigits: 5,
+                      maximumFractionDigits: 2,
                     })}
                   </InputAdornment>
                 ),
@@ -236,7 +242,7 @@ function App() {
                     {evaluatedRelativeOverhead?.toLocaleString("en", {
                       style: "percent",
                       minimumFractionDigits: 0,
-                      maximumFractionDigits: 5,
+                      maximumFractionDigits: 2,
                     })}
                   </InputAdornment>
                 ),
@@ -259,6 +265,7 @@ function App() {
                       style: "currency",
                       currency: "USD",
                       minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
                     })}
                   </InputAdornment>
                 ),
@@ -270,15 +277,21 @@ function App() {
               id="total-overhead"
               label="Total overhead"
               variant="outlined"
-              value={overhead}
+              value={overhead?.toLocaleString("en", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
               fullWidth
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
                 endAdornment: (
                   <InputAdornment position="end">
-                    {overhead?.toLocaleString("en", {
-                      style: "currency",
-                      currency: "USD",
-                      minimumFractionDigits: 2,
+                    {overheadPercentage?.toLocaleString("en", {
+                      style: "percent",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 2,
                     })}
                   </InputAdornment>
                 ),
@@ -289,7 +302,10 @@ function App() {
               id="break-even"
               label="Break-even"
               variant="outlined"
-              value={breakEven}
+              value={breakEven?.toLocaleString("en", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
               fullWidth
               InputProps={{
                 startAdornment: (
@@ -297,10 +313,10 @@ function App() {
                 ),
                 endAdornment: (
                   <InputAdornment position="end">
-                    {breakEven?.toLocaleString("en", {
-                      style: "currency",
-                      currency: "USD",
-                      minimumFractionDigits: 2,
+                    {breakEvenPercentage?.toLocaleString("en", {
+                      style: "percent",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 2,
                     })}
                   </InputAdornment>
                 ),
@@ -311,7 +327,10 @@ function App() {
               id="average-scaled-market-value"
               label="Average scaled market value"
               variant="outlined"
-              value={averageScaledMarketValue}
+              value={averageScaledMarketValue?.toLocaleString("en", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
               fullWidth
               InputProps={{
                 startAdornment: (
